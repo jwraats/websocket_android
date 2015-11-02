@@ -46,9 +46,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void changeColour(String message){
         if (message.equals("isGreen: 'true'")) {
-            getWindow().getDecorView().setBackgroundColor(Color.GREEN);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getWindow().getDecorView().setBackgroundColor(Color.GREEN);
+                }
+            });
         } else if(message.equals("isGreen: 'false'")){
-            getWindow().getDecorView().setBackgroundColor(Color.RED);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getWindow().getDecorView().setBackgroundColor(Color.RED);
+                }
+            });
         }
     }
 
@@ -65,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private void connectWebSocket() {
         URI uri;
         try {
-            uri = new URI("wss://www.senzingyou.nl:1337");
+            uri = new URI("http://www.senzingyou.nl:1337");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
@@ -89,14 +99,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClose(int i, String s, boolean b) {
                 connection = false;
-                System.out.println("Closed: "+s);
-                getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
+                System.out.println("Closed: " + s);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
+                    }
+                });
+
             }
 
             @Override
             public void onError(Exception e) {
                 System.out.println("Error: "+e.toString());
-                getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
+                    }
+                });
             }
         };
         mWebSocketClient.connect();
